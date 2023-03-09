@@ -22,7 +22,7 @@ const initialNodes = [
     style: {
       width: groupSize,
       height: groupSize,
-      backgroundColor: "rgba(255, 0, 0, 0.2)",
+      backgroundColor: "rgba(111,203,159, 0.7)",
       padding: 0,
     },
   },
@@ -32,9 +32,9 @@ const initialNodes = [
     position: { x: groupSize / 2 - nodeSize / 2, y: padding },
     parentNode: "1",
     style: {
-      width: 50,
-      height: 50,
-      lineHeight: "50px",
+      width: nodeSize,
+      height: nodeSize,
+      lineHeight: `${nodeSize}px`,
       padding: 0,
     },
   },
@@ -44,9 +44,9 @@ const initialNodes = [
     position: { x: padding, y: groupSize - padding - nodeSize },
     parentNode: "1",
     style: {
-      width: 50,
-      height: 50,
-      lineHeight: "50px",
+      width: nodeSize,
+      height: nodeSize,
+      lineHeight: `${nodeSize}px`,
       padding: 0,
     },
   },
@@ -59,9 +59,9 @@ const initialNodes = [
     },
     parentNode: "1",
     style: {
-      width: 50,
-      height: 50,
-      lineHeight: "50px",
+      width: nodeSize,
+      height: nodeSize,
+      lineHeight: `${nodeSize}px`,
       padding: 0,
     },
   },
@@ -86,28 +86,29 @@ const Flow = () => {
           const lowestY = Math.min(...prev.slice(1).map((a) => a.position.y));
           const highestX = Math.max(...prev.slice(1).map((a) => a.position.x));
           const highestY = Math.max(...prev.slice(1).map((a) => a.position.y));
-          if (lowestX < padding) {
+
+          if (
+            lowestX < padding ||
+            lowestX > padding ||
+            highestX + nodeSize + padding > prev[0].style.width ||
+            highestX + nodeSize + padding < prev[0].style.width
+          ) {
             prev[0].style = {
               ...prev[0].style,
               left: (padding - lowestX) * -1,
               width: highestX + nodeSize + padding + (padding - lowestX),
             };
-          } else if (highestX + nodeSize + padding > groupSize) {
-            prev[0].style = {
-              ...prev[0].style,
-              width: highestX + nodeSize + padding,
-            };
           }
-          if (lowestY < padding) {
+          if (
+            lowestY < padding ||
+            lowestY > padding ||
+            highestY + nodeSize + padding > prev[0].style.height ||
+            highestY + nodeSize + padding < prev[0].style.height
+          ) {
             prev[0].style = {
               ...prev[0].style,
               top: (padding - lowestY) * -1,
               height: highestY + nodeSize + padding + (padding - lowestY),
-            };
-          } else if (highestY + nodeSize + padding > groupSize) {
-            prev[0].style = {
-              ...prev[0].style,
-              height: highestY + nodeSize + padding,
             };
           }
         }
